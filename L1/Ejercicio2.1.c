@@ -63,7 +63,7 @@ int main (int argc, char *argv[]) {
     //Reservar una linea al principio
     char linea_dummy[64];
     int len_dummy = snprintf(linea_dummy, sizeof(linea_dummy),
-                         "El número de bloques es ????\n");
+                         "El número de bloques es ??\n");
 
     if (write_all(fd_out, linea_dummy, len_dummy) < 0) {
         perror("write linea dummy");
