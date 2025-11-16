@@ -1,4 +1,8 @@
 
+#include <stdio.h>
+#include <pwd.h>
+#include <unistd.h>
+
 struct passwd {
    char *pw_name;   /* nombre de usuario */
    char *pw_passwd; /* contraseña */
