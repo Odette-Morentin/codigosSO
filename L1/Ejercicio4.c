@@ -7,7 +7,7 @@
 #include <dirent.h>
 #include <string.h>
 
-#define S_ISREG2(mode) /* aquí el código de tu macro */
+#define S_ISREG2(mode) (((m) & S_IFMT) == S_IFREG) /* aquí el código de tu macro */
 
 int main(int argc, char *argv[]) {
    if (argc != 2) {
