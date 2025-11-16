@@ -4,6 +4,7 @@
 #include <unistd.h>
 
 /* Estructura de 
+
    struct passwd {
    char *pw_name;    nombre de usuario 
    char *pw_passwd;  contraseña 
@@ -17,6 +18,8 @@
 int main(void){
     uid_t my_uid = getuid();  // obtiene UID del usuario en ejecución
     struct passwd *pw = getpwuid(my_uid); // obtiene la entrada passwd
+    /*Buscar por nombre:
+    struct passwd *pw = getpwnam("odette");*/
 
     if (pw == NULL){
         perror("getpwuid");
@@ -32,3 +35,16 @@ int main(void){
     printf("Ruta del home: %s\n",pw->pw_dir);
     printf("Shell usada: %s,\n",pw->pw_shell);
 }
+
+/*Buscar para todos los usuarios:
+    struct passwd *pw;
+
+    setpwent();  // abre /etc/passwd para lectura
+
+    while ((pw = getpwent()) != NULL) {
+        printf("%s (%d) - Home: %s - Shell: %s\n",
+               pw->pw_name, pw->pw_uid, pw->pw_dir, pw->pw_shell);
+    }
+
+    endpwent();  // cerrar
+*/
