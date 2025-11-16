@@ -7,15 +7,14 @@
 #include <dirent.h>
 #include <string.h>
 
-#define S_ISREG2(mode) (((mode) & S_IFMT) == S_IFREG) /* aquí el código de tu macro */
+#define S_ISREG2(mode) (((mode) & S_IFMT) == S_IFREG) //Macro definida, comprueba si es un archivo regular
 
 int main(int argc, char *argv[]) {
    if (argc != 2) {
-      fprintf(stderr, "Uso: %s <directorio>\n", argv[0]);
-      return 1;
+      fprintf(stderr, "Uso: %s <directorio>\n", argv[0]); //imprime un mensaje de uso (cómo se debe ejecutar el programa)
    }
 
-   DIR *dir = opendir(argv[1]);
+   DIR *dir = opendir(argv[1]); //Abre el directorio, primer argumento
    if (!dir) {
       perror("opendir");
       return 1;
@@ -25,6 +24,7 @@ int main(int argc, char *argv[]) {
    struct stat st;
    char path[1024];
 
+   //Recorre todas las entradas del directorio (archivos, subdirectorios, etc.)
    while ((entry = readdir(dir)) != NULL) {
       snprintf(path, sizeof(path), "%s/%s", argv[1], entry->d_name);
       if (stat(path, &st) == 0) {
