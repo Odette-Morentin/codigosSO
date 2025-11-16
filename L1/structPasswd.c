@@ -3,15 +3,16 @@
 #include <pwd.h>
 #include <unistd.h>
 
-struct passwd {
-   char *pw_name;   /* nombre de usuario */
-   char *pw_passwd; /* contraseña */
-   uid_t pw_uid;    /* id. del usuario */
-   gid_t pw_gid;    /* id. del grupo primario */
-   char *pw_gecos;  /* nombre real (información GECOS) */
-   char *pw_dir;    /* directorio de inicio */
-   char *pw_shell;  /* shell de inicio de sesión */
-};
+/* Estructura de 
+   struct passwd {
+   char *pw_name;    nombre de usuario 
+   char *pw_passwd;  contraseña 
+   uid_t pw_uid;     id. del usuario
+   gid_t pw_gid;     id. del grupo primario 
+   char *pw_gecos;   nombre real (información GECOS) 
+   char *pw_dir;     directorio de inicio 
+   char *pw_shell;  shell de inicio de sesión 
+}; */
 
 int main(void){
     uid_t my_uid = getuid();  // obtiene UID del usuario en ejecución
