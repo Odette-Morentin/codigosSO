@@ -18,7 +18,7 @@ int var;
 pid_t pid;
 
 var=88;
-if(write(STDOUT_FILENO,buf,sizeof(buf)) != sizeof(buf)+1) {
+if(write(STDOUT_FILENO,buf,sizeof(buf)) != sizeof(buf)) {
 	perror("\nError en write");
 	exit(-1);
 }
