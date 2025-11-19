@@ -1,26 +1,41 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include <errno.h>
-#include <string.h>
+#include <sys/types.h>
+#include <sys/wait.h>
 
-int main(void){
+int main(void) {
+    int n_hijos = 5;
+    pid_t pid;
 
-    int n_procesos = 5;
-    pid_t childpid;
+    // Crea 5 procesos hijo
+    for (int i = 0; i < n_hijos; i++) {
+        pid = fork();
 
-
-    for (int i=0; i<n_procesos;1++)
-    {
-        if ((childpid=fork()) < 0) //Error al crear el hijo
-        {
-            fprintf(stderr,"No se pudo crear el hijo %d: %s", i,strerror(errno));
+        if (pid < 0) {   // Error con el fork
+            perror("Error en fork");
+            exit(EXIT_FAILURE);
         }
-        if (!childpid){
-            break;
+
+        if (pid == 0) {  // Proceso hijo
+            printf("Soy el hijo con PID: %d\n", getpid());
+            // Simular trabajo con sleep
+            sleep(1 + i);  // No terminen todos a la vez
+            exit(EXIT_SUCCESS);  // Que el hijo no siga al padre
         }
-        printf("Soy el hijo número %d con PID: %d y PPID; %d",i,getpid(),getppid());
-        sleep(1);
+
     }
+
+    // Sólo llega aquí el padre (los hijos ya hicieron exit)
+    int hijos_vivos = n_hijos;
+    int status;
+    pid_t pid_terminado;
+
+    while ((pid_terminado = wait(&status)) > 0) {
+        hijos_vivos--;
+        printf("Acaba de finalizar mi hijo con PID: %d. Sólo me quedan %d hijos vivos.\n",
+               pid_terminado, hijos_vivos);
+    }
+
     return 0;
 }
