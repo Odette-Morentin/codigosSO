@@ -1,12 +1,12 @@
-#include <stdio.h>          // Para printf
-#include <unistd.h>         // Para sleep(), getpid()
-#include <stdlib.h>         // Para malloc(), exit()
-#include <sys/types.h>      // Tipos como pid_t
-#include <linux/unistd.h>   // Para syscall()
-#include <sys/syscall.h>    // Constantes SYS_gettid
-#include <errno.h>          // Manejo de errores
-#include <linux/sched.h>    // Para flags de clone()
-#include <malloc.h>         // malloc
+#define _GNU_SOURCE
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <sys/syscall.h>
+#include <errno.h>
+#include <sched.h>        // este es el correcto
+#include <malloc.h>
 
 #define _GNU_SOURCE         /* Necesario para habilitar clone() */
 
