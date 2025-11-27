@@ -26,7 +26,7 @@ exit(1);
 if (PID == 0) {
 //Cierre del descriptor de lectura en el proceso hijo
 close(fd[0]);
-// Enviar el mensaje a través del cauce usando el descriptor de escritura
+// Enviar el mensaje a travÃ©s del cauce usando el descriptor de escritura
 write(fd[1],mensaje,strlen(mensaje)+1);
 exit(0);
 }
@@ -35,8 +35,8 @@ else { // Estoy en el proceso padre porque PID != 0
 close(fd[1]);
 //Leer datos desde el cauce.
 numBytes= read(fd[0],buffer,sizeof(buffer));
-printf("\nEl número de bytes recibidos es: %d",numBytes);
-printf("\nLa cadena enviada a través del cauce es: %s", buffer);
+printf("\nEl nÃºmero de bytes recibidos es: %d",numBytes);
+printf("\nLa cadena enviada a travÃ©s del cauce es: %s", buffer);
 }
 
 return(0);
