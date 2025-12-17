@@ -40,7 +40,7 @@ int main(int argc, char *argv[])
     }
 
     // Proceso padre
-    if (!background) {
+    if (background==0) {
         // Ejecutar en foreground → esperamos al hijo
         int status;
         waitpid(pid, &status, 0);

@@ -1,69 +1,59 @@
-
-
-#define _XOPEN_SOURCE 700
-
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>     // close
-#include <sys/types.h>
-#include <sys/stat.h>   // fstat, struct stat
-#include <fcntl.h>      // open
-#include <pwd.h>        // getpwuid, struct passwd
-#include <errno.h>      // errno
-#include <string.h>     // strerror
+#include <errno.h>
+#include <pwd.h>
 
 int main(int argc, char *argv[]) {
     int fd;
     struct stat st;
     struct passwd *pw;
-    const char *pathname;
 
-    // 1. Comprobar argumentos
+    /* Comprobar argumentos */
     if (argc != 2) {
         fprintf(stderr, "Uso: %s <archivo>\n", argv[0]);
-        return 1;   // fallo por uso incorrecto
+        return 1;
     }
 
-    pathname = argv[1];
-
-    // 2. Abrir el archivo (solo lectura)
-    fd = open(pathname, O_RDONLY);
-    if (fd == -1) {
-        // Error al abrir: miramos errno
-        if (errno == ENOENT) {
-            fprintf(stderr, "Error: el archivo '%s' no existe.\n", pathname); //stdi (teclado), stdout(Pantalla),stderr(e)
-        } else if (errno == EACCES) {
-            fprintf(stderr, "Error: no tiene permisos para abrir '%s'.\n", pathname);
-        } else {
-            fprintf(stderr, "Error al abrir '%s': %s\n", pathname, strerror(errno));
-        }
-        return 2;   // código de error al abrir
+    /* Abrir archivo */
+    if ((fd = open(argv[1], O_RDONLY)) < 0) {
+        if (errno == ENOENT)
+            fprintf(stderr, "El archivo no existe\n");
+        else if (errno == EACCES)
+            fprintf(stderr, "No hay permisos para abrir el archivo\n");
+        else
+            perror("Error al abrir");
+        return 2;
     }
 
-    // 3. Obtener información del archivo con fstat
-    if (fstat(fd, &st) == -1) {
-        fprintf(stderr, "Error al obtener información de '%s': %s\n",
-                pathname, strerror(errno));
-        close(fd);  // intentamos cerrar igual
-        return 3;   // código de error al obtener info
+    /* Obtener información */
+    if (fstat(fd, &st) < 0) {
+        fprintf(stderr, "No se pudo obtener información del archivo\n");
+        close(fd);
+        return 3;
     }
 
-    // 4. Obtener nombre del propietario a partir del UID
-    pw = getpwuid(st.st_uid);
-    const char *owner_name = pw ? pw->pw_name : "(desconocido)";
-
-    // 5. Mostrar la información por la salida estándar
-    printf("Nombre del archivo: %s\n", pathname);
-    printf("Tamaño en bytes: %lld\n", (long long)st.st_size);
-    printf("Permisos (octal): %04o\n", st.st_mode & 0777);
-    printf("Propietario: %s\n", owner_name);
-
-    // 6. Cerrar el archivo
-    if (close(fd) == -1) {
-        fprintf(stderr, "Error al cerrar '%s': %s\n",
-                pathname, strerror(errno));
-        return 4;   // error al cerrar
+    /* Obtener propietario */
+    if ((pw = getpwuid(st.st_uid)) == NULL) {
+        fprintf(stderr, "Error al obtener el propietario\n");
+        close(fd);
+        return 4;
     }
 
-    return 0;   // éxito
+    /* Mostrar información */
+    printf("Nombre del archivo: %s\n", argv[1]);
+    printf("Tamaño en bytes: %ld\n", st.st_size);
+    printf("Permisos: %04o\n", st.st_mode & 0777);
+    printf("Nombre del propietario: %s\n", pw->pw_name);
+
+    /* Cerrar archivo */
+    if (close(fd) < 0) {
+        perror("Error al cerrar el archivo");
+        return 5;
+    }
+
+    return 0;
 }
