@@ -48,7 +48,7 @@ int main(int argc, char *argv[])
         // Reemplaza completamente el código del hijo por el binario ls
         execlp("ls", "ls", NULL);
 
-        // Si exec falla, el código continúa (lo cual es raro)
+        // Si exec falla, el código continúa
         perror("execlp ls");
         exit(1);
     }
